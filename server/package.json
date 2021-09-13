@@ -8,7 +8,8 @@
         "start": "node src/server.js",
         "test": "jest",
         "test-watch": "jest --watch",
-        "test-detect": "jest --detectOpenHandles"
+        "test-detect": "jest --detectOpenHandles",
+        "cluster": "pm2 start src/server.js -i max"
     },
     "keywords": [],
     "author": "",
@@ -17,7 +18,8 @@
         "cors": "^2.8.5",
         "csv-parse": "^4.16.2",
         "express": "^4.17.1",
-        "morgan": "^1.10.0"
+        "morgan": "^1.10.0",
+        "pm2": "^5.1.1"
     },
     "devDependencies": {
         "jest": "^27.1.0",
