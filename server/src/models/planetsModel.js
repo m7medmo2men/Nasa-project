@@ -1,8 +1,7 @@
 const parse = require("csv-parse");
 const fs = require("fs");
 const path = require("path");
-
-const hapitablePlanets = [];
+const planets = require("./planets.mongo");
 
 const isHabitablePlanet = (planet) => {
     return (
@@ -22,22 +21,47 @@ function loadPlanetsData() {
                     columns: true,
                 })
             )
-            .on("data", (data) => {
-                if (isHabitablePlanet(data)) hapitablePlanets.push(data);
+            .on("data", async (data) => {
+                if (isHabitablePlanet(data)) {
+                    // hapitablePlanets.push(data) ;
+                    await savePlanet(data);
+                }
             })
             .on("error", (err) => {
                 console.log("Error Happend : " + err);
                 reject(err);
             })
-            .on("end", () => {
+            .on("end", async () => {
+                const planetsCount = (await getAllPlanets()).length;
                 console.log("Finish Reading File");
-                resolve(hapitablePlanets);
+                console.log(`Find ${planetsCount} planets`);
+                resolve();
             });
     });
 }
 
-function getAllPlanets() {
-    return hapitablePlanets;
+async function getAllPlanets() {
+    return await planets.find({});
+}
+
+async function savePlanet(planet) {
+    // We can't use create because this function is called alot
+
+    // await planets.create({
+    //     keplerName: data.kepler_name,
+    // });
+
+    // so we will use upsert which is inset + update;
+
+    try {
+        await planets.updateOne(
+            { keplerName: planet.kepler_name },
+            { keplerName: planet.kepler_name },
+            { upsert: true }
+        );
+    } catch (err) {
+        console.log(`Could not save the planet  ${err}`);
+    }
 }
 
 module.exports = {
