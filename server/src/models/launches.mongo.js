@@ -32,3 +32,5 @@ const launchesSchmea = new mongoose.Schema({
         default: true,
     },
 });
+
+module.exports = mongoose.model("Launch", launchesSchmea);
