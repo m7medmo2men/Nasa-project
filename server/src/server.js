@@ -1,4 +1,7 @@
 const http = require("http");
+
+require("dotenv").config(); // This Line is called here because we want to populate values which is in  .env file also inside the files down
+
 const app = require("./app");
 const { mongoConnect } = require("./services/mongo");
 const { loadPlanetsData } = require("./models/planetsModel");
